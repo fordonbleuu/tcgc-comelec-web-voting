@@ -536,7 +536,7 @@ function AdminDashboard({ onLogout }) {
 
   const handleAddCandidate = (e) => {
     e.preventDefault();
-    if (!newCandidate.name || !newCandidate.position) return;
+    if (!newCandidate.name?.trim() || !newCandidate.position) return;
 
     const id = `${newCandidate.councilType.toLowerCase()}-${Date.now()}`;
     const candidate = {
@@ -726,7 +726,13 @@ function AdminDashboard({ onLogout }) {
           <div className="candidates-section">
             <form onSubmit={handleAddCandidate} className="add-form">
               <h3>Add New Candidate</h3>
-<div className="form-row">
+              <div className="form-row">
+                <input
+                  type="text"
+                  placeholder="Candidate Name"
+                  value={newCandidate.name || ''}
+                  onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
+                />
                 <select
                   value={newCandidate.position}
                   onChange={(e) => setNewCandidate({ ...newCandidate, position: e.target.value })}
@@ -736,6 +742,8 @@ function AdminDashboard({ onLogout }) {
                     <option key={pos} value={pos}>{pos}</option>
                   ))}
                 </select>
+              </div>
+              <div className="form-row">
                 <input
                   type="text"
                   placeholder="Party (optional)"
