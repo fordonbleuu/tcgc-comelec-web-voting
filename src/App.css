@@ -318,20 +318,21 @@ body {
 }
 
 .logout-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #013220;
+  border: 2px solid #013220;
   color: white;
-  padding: 0.625rem 1.25rem;
+  padding: 0.75rem 2rem;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   transition: all 0.3s ease;
   font-family: inherit;
+  margin-top: 1.5rem;
 }
 
 .logout-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #FF8C00;
   border-color: #FF8C00;
 }
 
@@ -530,6 +531,49 @@ body {
   transform: scaleX(1);
 }
 
+.abstain-card {
+  border-color: #9ca3af;
+  background: #f9fafb;
+}
+
+.abstain-card:hover {
+  border-color: #6b7280;
+  background: #f3f4f6;
+}
+
+.abstain-card.selected {
+  border-color: #6b7280;
+  background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.abstain-btn {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 1.5rem auto 0;
+  padding: 0.875rem 2rem;
+  border: 2px solid #013220;
+  border-radius: 50px;
+  background: #013220;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.abstain-btn:hover {
+  border-color: #FF8C00;
+  background: #FF8C00;
+  color: white;
+}
+
+.abstain-btn.selected {
+  border-color: #022a1c;
+  background: #022a1c;
+  color: white;
+}
+
 .candidate-avatar {
   width: 70px;
   height: 70px;
@@ -678,6 +722,45 @@ body {
 .success-card p {
   color: #6b7280;
   margin-bottom: 1.5rem;
+}
+
+.vote-receipt {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.vote-receipt h3 {
+  color: #013220;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  border-bottom: 2px solid #013220;
+  padding-bottom: 0.5rem;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.receipt-row:last-child {
+  border-bottom: none;
+}
+
+.receipt-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.receipt-value {
+  color: #1f2937;
+  font-weight: 600;
 }
 
 .admin-dashboard .portal-header {

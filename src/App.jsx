@@ -43,7 +43,7 @@ function App() {
       <header className="header">
         <img src={Logo} alt="TCGC Logo" className="header-logo" />
         <div className="header-text">
-          <h1>TCGC</h1>
+          <h1>TCGC - COMELEC</h1>
           <p>Student Voting System</p>
         </div>
       </header>
@@ -215,7 +215,6 @@ function StudentPortal({ user, onLogout }) {
       setSscSelection(data.ssc);
       setIscSelection(data.isc);
       setSubmitted(true);
-      setPhase(2);
     }
   }, []);
 
@@ -247,7 +246,7 @@ function StudentPortal({ user, onLogout }) {
     setSubmitted(true);
   };
 
-  const canSubmit = sscSelection && iscSelection;
+  const canSubmit = (sscSelection !== null) && (iscSelection !== null);
 
   if (submitted) {
     return (
@@ -255,7 +254,29 @@ function StudentPortal({ user, onLogout }) {
         <div className="success-container">
           <div className="success-card">
             <h2>Vote Submitted Successfully!</h2>
-            <p>Thank you for participating, {user.id}</p>
+            <div className="vote-receipt">
+              <h3>Voting Receipt</h3>
+              <div className="receipt-row">
+                <span className="receipt-label">Student ID:</span>
+                <span className="receipt-value">{user.id}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-label">Institute:</span>
+                <span className="receipt-value">{selectedInstitute}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-label">SSC Vote:</span>
+                <span className="receipt-value">{sscSelection?.name || 'No selection'}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-label">ISC Vote:</span>
+                <span className="receipt-value">{iscSelection?.name || 'No selection'}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="receipt-label">Date:</span>
+                <span className="receipt-value">{new Date().toLocaleString()}</span>
+              </div>
+            </div>
             <button onClick={onLogout} className="logout-btn">Logout</button>
           </div>
         </div>
@@ -292,9 +313,6 @@ function StudentPortal({ user, onLogout }) {
             <div className="selected-institute">
               <span>Selected Institute: </span>
               <strong>{selectedInstitute}</strong>
-              <button className="change-btn" onClick={() => setPhase(1)}>
-                Change
-              </button>
             </div>
 
             <section className="council-section">
@@ -314,6 +332,12 @@ function StudentPortal({ user, onLogout }) {
                   </div>
                 ))}
               </div>
+              <button
+                className={`abstain-btn ${sscSelection?.id === 'abstain' ? 'selected' : ''}`}
+                onClick={() => setSscSelection({ id: 'abstain', name: 'I prefer not to vote', position: '', party: '' })}
+              >
+                I prefer not to vote
+              </button>
             </section>
 
             <section className="council-section">
@@ -333,6 +357,12 @@ function StudentPortal({ user, onLogout }) {
                   </div>
                 ))}
               </div>
+              <button
+                className={`abstain-btn ${iscSelection?.id === 'abstain' ? 'selected' : ''}`}
+                onClick={() => setIscSelection({ id: 'abstain', name: 'I prefer not to vote', position: '', party: '' })}
+              >
+                I prefer not to vote
+              </button>
             </section>
 
             <div className="submit-section">
