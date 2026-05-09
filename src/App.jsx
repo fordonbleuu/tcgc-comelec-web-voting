@@ -8,6 +8,8 @@ const ADMIN_CREDENTIALS = { username: 'admin', password: 'admin123' };
 
 const INITIAL_INSTITUTES = ['Technology', 'Education', 'Arts & Sciences'];
 
+const POSITIONS = ['President', 'Vice President', 'Secretary', 'Treasurer'];
+
 const INITIAL_SSC_CANDIDATES = [
   { id: 'ssc-pres', name: 'Maria Santos', position: 'President', party: 'Unilink', type: 'SSC' },
   { id: 'ssc-vp', name: 'James Rivera', position: 'Vice President', party: 'Unilink', type: 'SSC' },
@@ -33,6 +35,14 @@ const INITIAL_ISC_CANDIDATES = {
 function App() {
   const [user, setUser] = useState(null);
   const [view, setView] = useState('login');
+  const [voters, setVoters] = useState([]);
+
+  useEffect(() => {
+    const savedVoters = localStorage.getItem('tcgc_voters');
+    if (savedVoters) {
+      setVoters(JSON.parse(savedVoters));
+    }
+  }, []);
 
   return (
     <div className="app">
@@ -51,6 +61,12 @@ function App() {
       <div className="main-content">
         {view === 'login' && (
           <LoginCard
+            voters={voters}
+            onRegisterVoter={(voter) => {
+              const updatedVoters = [...voters, voter];
+              setVoters(updatedVoters);
+              localStorage.setItem('tcgc_voters', JSON.stringify(updatedVoters));
+            }}
             onStudentLogin={(student) => {
               setUser(student);
               setView('student');
@@ -85,20 +101,50 @@ function App() {
   );
 }
 
-function LoginCard({ onStudentLogin, onAdminLogin }) {
+function LoginCard({ voters, onRegisterVoter, onStudentLogin, onAdminLogin }) {
   const [studentId, setStudentId] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('student');
+  const [regName, setRegName] = useState('');
+  const [regStudentId, setRegStudentId] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [regSuccess, setRegSuccess] = useState(false);
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (!regName || !regStudentId || !regPassword) {
+      setError('Please fill in all fields');
+      return;
+    }
+    if (voters.find(v => v.id === regStudentId)) {
+      setError('Student ID already registered');
+      return;
+    }
+    if (regStudentId === STUDENT_CREDENTIALS.id) {
+      setError('Student ID already exists');
+      return;
+    }
+    onRegisterVoter({ id: regStudentId, name: regName, password: regPassword });
+    setRegSuccess(true);
+    setRegName('');
+    setRegStudentId('');
+    setRegPassword('');
+  };
 
   const handleStudentLogin = (e) => {
     e.preventDefault();
     if (studentId === STUDENT_CREDENTIALS.id && studentPassword === STUDENT_CREDENTIALS.password) {
-      onStudentLogin({ type: 'student', id: studentId });
+      onStudentLogin({ type: 'student', id: studentId, name: 'Default Student' });
     } else {
-      setError('Invalid Student ID or Password');
+      const registeredVoter = voters.find(v => v.id === studentId && v.password === studentPassword);
+      if (registeredVoter) {
+        onStudentLogin({ type: 'student', id: studentId, name: registeredVoter.name });
+      } else {
+        setError('Invalid Student ID or Password');
+      }
     }
   };
 
@@ -126,6 +172,12 @@ function LoginCard({ onStudentLogin, onAdminLogin }) {
         >
           Admin Login
         </button>
+        <button
+          className={`tab-btn ${activeTab === 'register' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('register'); setError(''); setRegSuccess(false); }}
+        >
+          Register as Voter
+        </button>
       </div>
 
       {activeTab === 'student' ? (
@@ -151,7 +203,7 @@ function LoginCard({ onStudentLogin, onAdminLogin }) {
           {error && <p className="error-msg">{error}</p>}
           <button type="submit" className="login-btn">Login as Student</button>
         </form>
-      ) : (
+      ) : activeTab === 'admin' ? (
         <form onSubmit={handleAdminLogin} className="login-form">
           <div className="form-group">
             <label>Username</label>
@@ -174,6 +226,39 @@ function LoginCard({ onStudentLogin, onAdminLogin }) {
           {error && <p className="error-msg">{error}</p>}
           <button type="submit" className="login-btn">Login as Admin</button>
         </form>
+      ) : (
+        <form onSubmit={handleRegister} className="login-form">
+          <div className="form-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              value={regName}
+              onChange={(e) => setRegName(e.target.value)}
+              placeholder="Enter Full Name"
+            />
+          </div>
+          <div className="form-group">
+            <label>Student ID</label>
+            <input
+              type="text"
+              value={regStudentId}
+              onChange={(e) => setRegStudentId(e.target.value)}
+              placeholder="Enter Student ID"
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={regPassword}
+              onChange={(e) => setRegPassword(e.target.value)}
+              placeholder="Create Password"
+            />
+          </div>
+          {error && <p className="error-msg">{error}</p>}
+          {regSuccess && <p className="success-msg">Registration successful! Please login.</p>}
+          <button type="submit" className="login-btn">Register</button>
+        </form>
       )}
     </div>
   );
@@ -182,6 +267,8 @@ function LoginCard({ onStudentLogin, onAdminLogin }) {
 function StudentPortal({ user, onLogout }) {
   const [phase, setPhase] = useState(1);
   const [selectedInstitute, setSelectedInstitute] = useState(null);
+  const [sscPosition, setSscPosition] = useState('President');
+  const [iscPosition, setIscPosition] = useState('President');
   const [sscSelection, setSscSelection] = useState(null);
   const [iscSelection, setIscSelection] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -217,6 +304,14 @@ function StudentPortal({ user, onLogout }) {
       setSubmitted(true);
     }
   }, []);
+
+  useEffect(() => {
+    setSscSelection(null);
+  }, [sscPosition]);
+
+  useEffect(() => {
+    setIscSelection(null);
+  }, [iscPosition]);
 
   const handleInstituteSelect = (institute) => {
     setSelectedInstitute(institute);
@@ -317,9 +412,17 @@ function StudentPortal({ user, onLogout }) {
 
             <section className="council-section">
               <h3>Supreme Student Council (SSC)</h3>
+              <div className="position-select">
+                <label>Select Position:</label>
+                <select value={sscPosition} onChange={(e) => setSscPosition(e.target.value)}>
+                  {POSITIONS.map((pos) => (
+                    <option key={pos} value={pos}>{pos}</option>
+                  ))}
+                </select>
+              </div>
               <p className="section-note">Vote for one candidate</p>
               <div className="candidates-grid">
-                {candidates.SSC.map((candidate) => (
+                {candidates.SSC.filter(c => c.position === sscPosition).map((candidate) => (
                   <div
                     key={candidate.id}
                     className={`candidate-card ${sscSelection?.id === candidate.id ? 'selected' : ''}`}
@@ -331,6 +434,9 @@ function StudentPortal({ user, onLogout }) {
                     <p className="party">{candidate.party}</p>
                   </div>
                 ))}
+                {candidates.SSC.filter(c => c.position === sscPosition).length === 0 && (
+                  <p className="no-candidates">No candidates for {sscPosition}</p>
+                )}
               </div>
               <button
                 className={`abstain-btn ${sscSelection?.id === 'abstain' ? 'selected' : ''}`}
@@ -342,9 +448,17 @@ function StudentPortal({ user, onLogout }) {
 
             <section className="council-section">
               <h3>Institute Student Council (ISC) - {selectedInstitute}</h3>
+              <div className="position-select">
+                <label>Select Position:</label>
+                <select value={iscPosition} onChange={(e) => setIscPosition(e.target.value)}>
+                  {POSITIONS.map((pos) => (
+                    <option key={pos} value={pos}>{pos}</option>
+                  ))}
+                </select>
+              </div>
               <p className="section-note">Vote for one candidate</p>
               <div className="candidates-grid">
-                {(candidates.ISC[selectedInstitute] || []).map((candidate) => (
+                {(candidates.ISC[selectedInstitute] || []).filter(c => c.position === iscPosition).map((candidate) => (
                   <div
                     key={candidate.id}
                     className={`candidate-card ${iscSelection?.id === candidate.id ? 'selected' : ''}`}
@@ -356,6 +470,9 @@ function StudentPortal({ user, onLogout }) {
                     <p className="party">{candidate.party}</p>
                   </div>
                 ))}
+                {(candidates.ISC[selectedInstitute] || []).filter(c => c.position === iscPosition).length === 0 && (
+                  <p className="no-candidates">No candidates for {iscPosition}</p>
+                )}
               </div>
               <button
                 className={`abstain-btn ${iscSelection?.id === 'abstain' ? 'selected' : ''}`}
@@ -609,19 +726,16 @@ function AdminDashboard({ onLogout }) {
           <div className="candidates-section">
             <form onSubmit={handleAddCandidate} className="add-form">
               <h3>Add New Candidate</h3>
-              <div className="form-row">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  value={newCandidate.name}
-                  onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
-                />
-                <input
-                  type="text"
-                  placeholder="Position"
+<div className="form-row">
+                <select
                   value={newCandidate.position}
                   onChange={(e) => setNewCandidate({ ...newCandidate, position: e.target.value })}
-                />
+                >
+                  <option value="">Select Position</option>
+                  {POSITIONS.map((pos) => (
+                    <option key={pos} value={pos}>{pos}</option>
+                  ))}
+                </select>
                 <input
                   type="text"
                   placeholder="Party (optional)"

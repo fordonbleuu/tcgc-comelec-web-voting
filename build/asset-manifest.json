@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/static/css/main.fa222214.css",
+    "main.js": "/static/js/main.6b5b3f63.js",
+    "static/media/tcgc-bg.png": "/static/media/tcgc-bg.408914b993a9e70c5a52.png",
+    "static/media/tcgc-logo.png": "/static/media/tcgc-logo.b77ecb86b8acf75cc098.png",
+    "index.html": "/index.html",
+    "main.fa222214.css.map": "/static/css/main.fa222214.css.map",
+    "main.6b5b3f63.js.map": "/static/js/main.6b5b3f63.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fa222214.css",
+    "static/js/main.6b5b3f63.js"
+  ]
+}

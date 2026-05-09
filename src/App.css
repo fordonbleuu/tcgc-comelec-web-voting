@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 * {
   margin: 0;
@@ -7,7 +7,7 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background-color: #013220;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
@@ -123,7 +123,7 @@ body {
   border-radius: 24px;
   padding: 2.5rem;
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   box-shadow: 
     0 25px 50px -12px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 140, 0, 0.1);
@@ -143,6 +143,7 @@ body {
 
 .login-tabs {
   display: flex;
+  flex-wrap: nowrap;
   margin-bottom: 2rem;
   border-radius: 14px;
   overflow: hidden;
@@ -152,7 +153,7 @@ body {
 
 .tab-btn {
   flex: 1;
-  padding: 0.875rem;
+  padding: 0.6rem 0.5rem;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -160,7 +161,8 @@ body {
   color: #6b7280;
   border-radius: 10px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
@@ -217,6 +219,15 @@ body {
   background: #fef2f2;
   border-radius: 10px;
   animation: shake 0.5s ease-in-out;
+}
+
+.success-msg {
+  color: #16a34a;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0.75rem;
+  background: #f0fdf4;
+  border-radius: 10px;
 }
 
 @keyframes shake {
@@ -473,11 +484,60 @@ body {
   border-radius: 2px;
 }
 
+.position-select {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #013220 0%, #024d2e 100%);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+}
+
+.position-select label {
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.position-select select {
+  flex: 1;
+  max-width: 160px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  border: 2px solid #FF8C00;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #013220;
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23FF8C00'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") no-repeat right 0.5rem center/1rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.position-select select:hover,
+.position-select select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3);
+}
+
 .section-note {
   color: #6b7280;
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
   padding-left: 0.75rem;
+}
+
+.no-candidates {
+  color: #9ca3af;
+  font-style: italic;
+  padding: 1rem;
+  text-align: center;
+  grid-column: 1 / -1;
 }
 
 .candidates-grid {
@@ -678,13 +738,14 @@ body {
 }
 
 .success-card {
-  background: white;
-  border-radius: 24px;
-  padding: 3rem;
+  background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%);
+  border: 2px solid #FF8C00;
+  border-radius: 20px;
+  padding: 2.5rem;
   text-align: center;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 40px rgba(1, 50, 32, 0.25), 0 0 0 1px rgba(255, 140, 0, 0.1);
   animation: scaleIn 0.4s ease-out;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 @keyframes scaleIn {
@@ -702,21 +763,24 @@ body {
   width: 80px;
   height: 80px;
   margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #FF8C00, #ff9d2e);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.5rem;
   color: white;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 20px rgba(255, 140, 0, 0.4);
 }
 
 .success-card h2 {
-  color: #013220;
+  background: linear-gradient(135deg, #013220, #024d2e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .success-card p {
@@ -725,28 +789,31 @@ body {
 }
 
 .vote-receipt {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #013220 0%, #024d2e 100%);
+  border: 1px solid #FF8C00;
+  border-radius: 16px;
   padding: 1.5rem;
   margin: 1.5rem 0;
   text-align: left;
 }
 
 .vote-receipt h3 {
-  color: #013220;
+  color: #FF8C00;
   font-size: 1.1rem;
   margin-bottom: 1rem;
   text-align: center;
-  border-bottom: 2px solid #013220;
+  border-bottom: 2px solid #FF8C00;
   padding-bottom: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .receipt-row {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px dashed #e5e7eb;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
 .receipt-row:last-child {
@@ -754,13 +821,16 @@ body {
 }
 
 .receipt-label {
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .receipt-value {
-  color: #1f2937;
-  font-weight: 600;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: right;
 }
 
 .admin-dashboard .portal-header {
